@@ -6,7 +6,6 @@ typedef struct node {
     struct node *next;
 } node;
 
-static node *head;
 
 void print_linked_list(node *head)
 {
@@ -39,7 +38,7 @@ void add_to_linked_list(node *head, int val)
 }
 
 
-void remove_from_linked_list(node *n)
+void remove_from_linked_list(node *head, node *n)
 {
     // Node is at the front of the list.
     if (n == head)
@@ -71,6 +70,45 @@ void remove_from_linked_list(node *n)
 }
 
 
+/*
+ * Return the kth to last node in a linked list.
+ */
+node *return_kth_to_last(node *head, int k)
+{
+    // Ready runners.
+    node *runner1 = head;
+    node *runner2 = head;
+
+    // Keep track of the list length.
+    int list_len = 1;
+
+    // nth node that runner1 is on.
+    int n = 0;
+
+    // Find the length of the list.
+    while (runner2->next)
+    {
+        list_len++;
+        runner2 = runner2->next;
+    }
+
+    // Check if a kth to last node exists.
+    if (k > list_len)
+    {
+        return NULL;
+    }
+
+    // Iterate runner 1 up to the kth to last node.
+    while (list_len - n > k)
+    {
+        runner1 = runner1->next;
+        n++;
+    }
+
+    return runner1;
+}
+
+
 void remove_dups(node *head)
 {
     node *runner1 = head;
@@ -85,7 +123,7 @@ void remove_dups(node *head)
             if (runner1->val == runner2->val)
             {
                 node *temp = runner2;
-                remove_from_linked_list(runner2);
+                remove_from_linked_list(head, runner2);
                 runner2 = temp->next;
                 continue;
             }
@@ -99,25 +137,44 @@ void remove_dups(node *head)
 
 int main()
 {
-    head = NULL;
-    head = malloc(sizeof(node));
-    head->val = 1;
-    head->next = NULL;
+    printf("Remove duplicates demo...\n");
+    node *head1 = NULL;
+    head1 = malloc(sizeof(node));
+    head1->val = 1;
+    head1->next = NULL;
 
-    add_to_linked_list(head, 2);
-    add_to_linked_list(head, 3);
-    add_to_linked_list(head, 3);
-    add_to_linked_list(head, 4);
-    add_to_linked_list(head, 5);
-    add_to_linked_list(head, 2);
+    add_to_linked_list(head1, 2);
+    add_to_linked_list(head1, 3);
+    add_to_linked_list(head1, 3);
+    add_to_linked_list(head1, 4);
+    add_to_linked_list(head1, 5);
+    add_to_linked_list(head1, 2);
 
     printf("Before...\n");
-    print_linked_list(head);
+    print_linked_list(head1);
 
-    remove_dups(head);
+    remove_dups(head1);
 
     printf("After...\n");
-    print_linked_list(head);
+    print_linked_list(head1);
+
+    printf("\nReturn kth to last demo...\n");
+    node *head2 = malloc(sizeof(node));
+    head2->next = NULL;
+    head2->val = 1;
+    int k;
+    k = 5;
+
+    add_to_linked_list(head2, 2);
+    add_to_linked_list(head2, 3);
+    add_to_linked_list(head2, 4);
+    add_to_linked_list(head2, 5);
+
+    printf("List is:\n");
+    print_linked_list(head2);
+    printf("k = %d\n", k);
+    node *kth_to_last_node = return_kth_to_last(head2, k);
+    printf("kth to last is: %d\n", kth_to_last_node->val);
 
     return 0;
 }

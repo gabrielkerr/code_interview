@@ -13,7 +13,7 @@ void print_linked_list(node *head)
 
     while (current_node->next)
     {
-        printf("%d\n", current_node->val);
+        printf("%d -> ", current_node->val);
         current_node = current_node->next;
     }
     printf("%d\n", current_node->val);

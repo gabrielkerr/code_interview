@@ -20,7 +20,7 @@ void print_linked_list(node *head)
 }
 
 
-void add_to_linked_list(node *head, int val)
+node *add_to_linked_list(node *head, int val)
 {
     node *current_node = head;
 
@@ -35,6 +35,8 @@ void add_to_linked_list(node *head, int val)
     new_node->next = NULL;
 
     current_node->next = new_node;
+
+    return new_node;
 }
 
 
@@ -67,6 +69,27 @@ void remove_from_linked_list(node *head, node *n)
         }
         current->next = NULL;
     }
+}
+
+
+/*
+ * Remove a node from the list given access to only that node.
+ */
+void remove_from_middle_of_list(node *n)
+{
+   node *current = n;
+   node *previous = NULL;
+
+   // Make all nodes have the value of the node in front of them.
+   while (current->next)
+   {
+        current->val = current->next->val;
+        previous = current;
+        current = current->next;
+   }
+
+   previous->next = NULL;
+   free(current);
 }
 
 
@@ -135,6 +158,7 @@ void remove_dups(node *head)
     }
 }
 
+
 int main()
 {
     printf("Remove duplicates demo...\n");
@@ -163,10 +187,10 @@ int main()
     head2->next = NULL;
     head2->val = 1;
     int k;
-    k = 5;
+    k = 2;
 
     add_to_linked_list(head2, 2);
-    add_to_linked_list(head2, 3);
+    node* third = add_to_linked_list(head2, 3);
     add_to_linked_list(head2, 4);
     add_to_linked_list(head2, 5);
 
@@ -175,6 +199,14 @@ int main()
     printf("k = %d\n", k);
     node *kth_to_last_node = return_kth_to_last(head2, k);
     printf("kth to last is: %d\n", kth_to_last_node->val);
+
+    printf("\nDelete from middle demo...\n");
+    printf("List is:\n");
+    print_linked_list(head2);
+
+    printf("Removing 3...\n");
+    remove_from_middle_of_list(third);
+    print_linked_list(head2);
 
     return 0;
 }

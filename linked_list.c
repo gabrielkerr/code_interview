@@ -159,6 +159,47 @@ void remove_dups(node *head)
 }
 
 
+void partition_list(node *head, int val)
+{
+    int temp;
+    node *runner1 = head;
+    node *runner2 = head;
+    node *prev_runner2;
+
+    while (runner1 && runner2)
+    {
+        // Runner 1 finds values that are greater than or equal to the partition val.
+        while (runner1 && runner1->val < val)
+        {
+            runner1 = runner1->next;
+        }
+
+        // Then, runner 2 finds values that are less than the partition val.
+        runner2 = runner1;
+        while (runner2 && runner2->val >= val)
+        {
+            prev_runner2 = runner2;
+            runner2 = runner2->next;
+        }
+
+        if (!runner2 && prev_runner2->val == val)
+        {
+            temp = prev_runner2->val;
+            prev_runner2->val = runner1->val;
+            runner1->val = temp;
+        }
+
+        // Switch the values.
+        if (runner1 && runner2)
+        {
+            temp = runner2->val;
+            runner2->val = runner1->val;
+            runner1->val = temp;
+        }
+    }
+}
+
+
 int main()
 {
     printf("Remove duplicates demo...\n");
@@ -207,6 +248,27 @@ int main()
     printf("Removing 3...\n");
     remove_from_middle_of_list(third);
     print_linked_list(head2);
+
+    printf("\nPartition demo...\n");
+    node *head3 = malloc(sizeof(node));
+    head3->val = 3;
+    head3->next = NULL;
+
+    add_to_linked_list(head3, 2);
+    add_to_linked_list(head3, 8);
+    add_to_linked_list(head3, 5);
+    add_to_linked_list(head3, 10);
+    add_to_linked_list(head3, 5);
+    add_to_linked_list(head3, 1);
+
+    printf("List is:\n");
+    print_linked_list(head3);
+
+    int partition_val = 5;
+    printf("Partition on %d...\n", partition_val);
+
+    partition_list(head3, partition_val);
+    print_linked_list(head3);
 
     return 0;
 }

@@ -200,6 +200,101 @@ void partition_list(node *head, int val)
 }
 
 
+node *sum_linked_list_reverse(node *head1, node* head2)
+{
+    int sum, carry, val;
+    // Head of list to be returned.
+    node *sum_head = malloc(sizeof(node));
+    sum_head->val = 0;
+    sum_head->next = NULL;
+
+    node *current_node = sum_head;
+    node *n1 = head1;
+    node *n2 = head2;
+    node *previous_node;
+
+    // Sum nodes while both are not null.
+    while (n1 && n2)
+    {
+        if (n1 == head1 && n2 == head2)
+        {
+            sum = n1->val + n2->val;
+        }
+        else
+        {
+            sum = carry + n1->val + n2->val;
+        }
+
+        val = sum % 10;
+        carry = sum / 10;
+
+        current_node->val = val;
+
+        n1 = n1->next;
+        n2 = n2->next;
+
+        if (n1 && n2)
+        {
+            node *new_node = malloc(sizeof(node));
+            new_node->val = 0;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            previous_node = current_node;
+            current_node = current_node->next;
+        }
+    }
+
+    // If lists are not the same size, clean up the rest.
+    if (n1)
+    {
+        while (n1)
+        {
+            node *new_node = malloc(sizeof(node));
+            sum = carry + n1->val;
+            val = sum % 10;
+            carry = sum / 10;
+            new_node->val = val;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            previous_node = current_node;
+            current_node = current_node->next;
+
+            n1 = n1->next;
+        }
+    }
+    else if (n2)
+    {
+        while (n2)
+        {
+            node *new_node = malloc(sizeof(node));
+            sum = carry + n2->val;
+            val = sum % 10;
+            carry = sum / 10;
+            new_node->val = val;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            previous_node = current_node;
+            current_node = current_node->next;
+
+            n2 = n2->next;
+        }
+    }
+
+    if (carry)
+    {
+        node *new_node = malloc(sizeof(node));
+        new_node->val = carry;
+        new_node->next = NULL;
+        current_node->next = new_node;
+    }
+
+    return sum_head;
+}
+
+
 int main()
 {
     printf("Remove duplicates demo...\n");
@@ -269,6 +364,26 @@ int main()
 
     partition_list(head3, partition_val);
     print_linked_list(head3);
+
+    printf("\nReverse sum demo...\n");
+    printf("Summing 7 + 95\n");
+
+    node *head4 = malloc(sizeof(node));
+    head4->val = 7;
+    head4->next = NULL;
+
+    node *head5 = malloc(sizeof(node));
+    head5->val = 5;
+    head5->next = NULL;
+    add_to_linked_list(head5, 9);
+
+    printf("List 1:\t");
+    print_linked_list(head4);
+    printf("List 2:\t");
+    print_linked_list(head5);
+
+    node* sum_head = sum_linked_list_reverse(head4, head5);
+    print_linked_list(sum_head);
 
     return 0;
 }

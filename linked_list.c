@@ -294,6 +294,80 @@ node *sum_linked_list_reverse(node *head1, node* head2)
     return sum_head;
 }
 
+node *sum_linked_list(node *head1, node *head2)
+{
+    int sum, carry, val, found_carry;
+    // Head of list to be returned.
+    node *sum_head = malloc(sizeof(node));
+    sum_head->val = 0;
+    sum_head->next = NULL;
+
+    node *current_node = sum_head;
+    node *n1 = head1;
+    node *n2 = head2;
+
+    // Sum all of the nodes in each list, not worrying about carries.
+    while (n1 && n2)
+    {
+        current_node->val = n1->val + n2->val;
+
+        n1 = n1->next;
+        n2 = n2->next;
+
+        if (n1 && n2)
+        {
+            node *new_node = malloc(sizeof(node));
+            new_node->val = 0;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            current_node = current_node->next;
+        }
+    }
+
+    // Go through the sum list until no nodes are greater than 9.
+    found_carry = 1;
+    current_node = sum_head;
+
+    // Continue while carries are found in the list.
+    while (found_carry)
+    {
+        while (current_node)
+        {
+            // Check if there is a carry on the next node.
+            if (current_node->next && current_node->next->val >= 10)
+            {
+                // Increment the number of carries by 1.
+                found_carry += 1;
+                val = current_node->next->val % 10;
+                carry = current_node->next->val / 10;
+                current_node->next->val = val;
+                current_node->val += carry;
+            }
+
+            current_node = current_node->next;
+
+        }
+
+        // If number of carries did not increase, no carries were found.
+        if (found_carry == 1)
+        {
+            found_carry = 0;
+        }
+        // Otherwise reset the carries.
+        else
+        {
+            found_carry = 1;
+        }
+
+        // Start looking for any more carries from the beginning of the list.
+        current_node = sum_head;
+    }
+
+    return sum_head;
+
+}
+
 
 int main()
 {
@@ -384,6 +458,25 @@ int main()
 
     node* sum_head = sum_linked_list_reverse(head4, head5);
     print_linked_list(sum_head);
+
+    printf("\nNormal sum demo...\n");
+    node *head6 = malloc(sizeof(node));
+    head6->val = 2;
+    head6->next = NULL;
+    add_to_linked_list(head6, 9);
+    add_to_linked_list(head6, 9);
+
+    node *head7 = malloc(sizeof(node));
+    head7->val = 1;
+    head7->next = NULL;
+    add_to_linked_list(head7, 0);
+    add_to_linked_list(head7, 1);
+
+    print_linked_list(head6);
+    print_linked_list(head7);
+    node *sum_head2;
+    sum_head2 = sum_linked_list(head6, head7);
+    print_linked_list(sum_head2);
 
     return 0;
 }

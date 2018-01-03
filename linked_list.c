@@ -296,7 +296,7 @@ node *sum_linked_list_reverse(node *head1, node* head2)
 
 node *sum_linked_list(node *head1, node *head2)
 {
-    int sum, carry, val, found_carry;
+    int sum, carry, val, found_carry, n1_len, n2_len, diff, i;
     // Head of list to be returned.
     node *sum_head = malloc(sizeof(node));
     sum_head->val = 0;
@@ -305,6 +305,62 @@ node *sum_linked_list(node *head1, node *head2)
     node *current_node = sum_head;
     node *n1 = head1;
     node *n2 = head2;
+
+    n1_len = 0;
+    n2_len = 0;
+
+    // Check if n1 and n2 are the same length.
+    while (n1)
+    {
+        n1_len++;
+        n1 = n1->next;
+    }
+    while (n2)
+    {
+        n2_len++;
+        n2 = n2->next;
+    }
+
+    n1 = head1;
+    n2 = head2;
+
+    // Take care of inequal length lists.
+    if (n2_len > n1_len)
+    {
+        diff = n2_len - n1_len;
+        while (diff > 0)
+        {
+            current_node->val = n2->val;
+
+            node *new_node = malloc(sizeof(node));
+            new_node->val = 0;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            current_node = current_node->next;
+
+            n2 = n2->next;
+            diff--;
+        }
+    }
+    else if (n2_len > n1_len)
+    {
+        diff = n1_len - n2_len;
+        while (diff > 0)
+        {
+            current_node->val = n1->val;
+
+            node *new_node = malloc(sizeof(node));
+            new_node->val = 0;
+            new_node->next = NULL;
+
+            current_node->next = new_node;
+            current_node = current_node->next;
+
+            n1 = n1->next;
+            diff--;
+        }
+    }
 
     // Sum all of the nodes in each list, not worrying about carries.
     while (n1 && n2)
@@ -461,10 +517,10 @@ int main()
 
     printf("\nNormal sum demo...\n");
     node *head6 = malloc(sizeof(node));
-    head6->val = 2;
+    head6->val = 9;
     head6->next = NULL;
     add_to_linked_list(head6, 9);
-    add_to_linked_list(head6, 9);
+    //add_to_linked_list(head6, 9);
 
     node *head7 = malloc(sizeof(node));
     head7->val = 1;

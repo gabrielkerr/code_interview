@@ -343,7 +343,7 @@ node *sum_linked_list(node *head1, node *head2)
             diff--;
         }
     }
-    else if (n2_len > n1_len)
+    else if (n1_len > n2_len)
     {
         diff = n1_len - n2_len;
         while (diff > 0)
@@ -418,6 +418,15 @@ node *sum_linked_list(node *head1, node *head2)
 
         // Start looking for any more carries from the beginning of the list.
         current_node = sum_head;
+    }
+
+    if (sum_head->val >= 10)
+    {
+        node *new_node = malloc(sizeof(node));
+        new_node->val = sum_head->val / 10;
+        new_node->next = sum_head;
+        sum_head->val = sum_head->val % 10;
+        sum_head = new_node;
     }
 
     return sum_head;
@@ -520,13 +529,13 @@ int main()
     head6->val = 9;
     head6->next = NULL;
     add_to_linked_list(head6, 9);
-    //add_to_linked_list(head6, 9);
+    add_to_linked_list(head6, 9);
 
     node *head7 = malloc(sizeof(node));
     head7->val = 1;
     head7->next = NULL;
-    add_to_linked_list(head7, 0);
-    add_to_linked_list(head7, 1);
+    //add_to_linked_list(head7, 0);
+    //add_to_linked_list(head7, 1);
 
     print_linked_list(head6);
     print_linked_list(head7);

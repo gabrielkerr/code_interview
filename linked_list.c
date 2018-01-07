@@ -7,6 +7,17 @@ typedef struct node {
 } node;
 
 
+node *create_node(int val)
+{
+    node *new_node = malloc(sizeof(node));
+
+    new_node->val = val;
+    new_node->next = NULL;
+
+    return new_node;
+}
+
+
 void print_linked_list(node *head)
 {
     node *current_node = head;
@@ -37,6 +48,21 @@ node *add_to_linked_list(node *head, int val)
     current_node->next = new_node;
 
     return new_node;
+}
+
+
+node *add_node_to_linked_list(node *head, node *n)
+{
+    node *current_node = head;
+
+    while (current_node->next)
+    {
+        current_node = current_node->next;
+    }
+
+    current_node->next = n;
+
+    return n;
 }
 
 
@@ -430,7 +456,35 @@ node *sum_linked_list(node *head1, node *head2)
     }
 
     return sum_head;
+}
 
+
+int detect_cycle(node *head)
+{
+    int i;
+    node *runner1 = head;
+    node *runner2 = head;
+
+    while (runner1 && runner2)
+    {
+        for (i = 0; i < 2; i++)
+        {
+            runner2 = runner2->next;
+            if (!runner2)
+            {
+                return 0;
+            }
+        }
+
+        if (runner1 == runner2)
+        {
+            return 1;
+        }
+
+        runner1 = runner1->next;
+    }
+
+    return 0;
 }
 
 
@@ -542,6 +596,34 @@ int main()
     node *sum_head2;
     sum_head2 = sum_linked_list(head6, head7);
     print_linked_list(sum_head2);
+
+    printf("\nDetect cycle demo...\n");
+    //      |-----<---^
+    //      |         |
+    // 1 -> 2 -> 3 -> 4
+    node *first = create_node(1);
+    node *second = create_node(2);
+    third = create_node(3);
+    node *fourth = create_node(4);
+
+    first->next = second;
+    second->next = third;
+    third->next = fourth;
+    fourth->next = second;
+
+    printf("List is 1 -> 2 -> 3 -> 4 -> 2 -> ...\n");
+    printf("Cycle detected: %d\n", detect_cycle(first));
+
+    node *no_cycle_head = malloc(sizeof(node));
+    no_cycle_head->val = 1;
+    no_cycle_head->next = NULL;
+
+    add_to_linked_list(no_cycle_head, 2);
+    add_to_linked_list(no_cycle_head, 3);
+    add_to_linked_list(no_cycle_head, 4);
+    printf("List is ");
+    print_linked_list(no_cycle_head);
+    printf("Cycle detected: %d\n", detect_cycle(no_cycle_head));
 
     return 0;
 }
